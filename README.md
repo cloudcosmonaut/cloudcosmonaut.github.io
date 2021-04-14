@@ -1,3 +1,1 @@
-cloudcosmonaut.nl webroot
-
-Sources are in the `source` branch
+cloudcosmonaut.nl sources, will be tranformed to a static website on a push to master

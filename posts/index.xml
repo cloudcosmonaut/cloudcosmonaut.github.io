@@ -1,0 +1,114 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Cloud Cosmonaut</title><link>https://cloudcosmonaut.nl/posts/</link><description>Recent content in Posts on Cloud Cosmonaut</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>Hindrik Bruinsma &lt;a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0&lt;/a></copyright><lastBuildDate>Mon, 12 Apr 2021 09:00:00 +0200</lastBuildDate><atom:link href="https://cloudcosmonaut.nl/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Running unit tests for every PR</title><link>https://cloudcosmonaut.nl/posts/2021/04/20210413-run-unit-tests-when-create-a-pr-on-github/</link><pubDate>Mon, 12 Apr 2021 09:00:00 +0200</pubDate><guid>https://cloudcosmonaut.nl/posts/2021/04/20210413-run-unit-tests-when-create-a-pr-on-github/</guid><description>A major part of the DevOps philosophy, is testing early in your development cycle and test often. To do that, you can run your test on every PR. Perferably on multiple SDK versions.
+When to run First we need to specify when the Action should trigger. In this case I want to run the Action when a Pull Request is composed agains the main branch.
+on: pull_request: branches: [ main ] Check out the code In most cases, this step doesn&amp;rsquo;t require any configuration.</description><content type="html"><![CDATA[<p>A major part of the DevOps philosophy, is testing early in your development cycle and test often. To do that, you can run your
+test on every PR. Perferably on multiple SDK versions.</p>
+<h2 id="when-to-run">When to run</h2>
+<p>First we need to specify when the Action should trigger. In this case I want to run the Action when a Pull Request is composed agains the <code>main</code> branch.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">on</span>:
+  <span style="color:#f92672">pull_request</span>:
+    <span style="color:#f92672">branches</span>: [ <span style="color:#ae81ff">main ]</span>
+</code></pre></div><h2 id="check-out-the-code">Check out the code</h2>
+<p>In most cases, this step doesn&rsquo;t require any configuration. When you want to access sub-modules, files from git-lfs or a remote GIT repository you might need to change some settings.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"> <span style="color:#f92672">steps</span>:
+    - <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">actions/checkout@v2</span>
+</code></pre></div><h2 id="run-the-unit-tests">Run the unit tests</h2>
+<p>This step requires you to pass the relative location of the Xcode Project or Workspace file, the scheme
+in your project to test and the destination (or target if that&rsquo;s more in your vocabulary)</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">- <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Xcode Test</span>
+      <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">devbotsxyz/xcode-test@v1.1.0</span>
+      <span style="color:#f92672">with</span>:
+        <span style="color:#f92672">project</span>: <span style="color:#e6db74">&#39;project.xsproj&#39;</span> <span style="color:#75715e"># `project` and `workspace` cannot be used at the same time</span>
+        <span style="color:#f92672">workspace</span>: <span style="color:#e6db74">&#39;workspace.xcworkspace&#39;</span> <span style="color:#75715e"># `project` and `workspace` cannot be used at the same time</span>
+        <span style="color:#f92672">scheme</span>: <span style="color:#e6db74">&#39;scheme&#39;</span>
+        <span style="color:#f92672">configuration</span>: <span style="color:#ae81ff">Debug</span>
+        <span style="color:#f92672">destination</span>: <span style="color:#ae81ff">platform=iOS Simulator,OS=latest,name=iPhone 11</span>
+</code></pre></div><h2 id="code-coverage">Code coverage</h2>
+<p>You might want to track changes in code coverage to get some idea on the quality of code. With Codecov
+you need to add an Acces Token when your project is on a private repo.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">    - <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">codecov/codecov-action@v1</span>
+      <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Determine code coverage with CodeCov</span>
+      <span style="color:#75715e"># For private repos, an access token for codecov.io is required</span>
+      <span style="color:#75715e"># token: ${{ secrets.CODECOV_TOKEN }}</span>
+</code></pre></div><h2 id="add-testing-matrix">Add testing matrix</h2>
+<p>But now you want to test them on different SDKs. Then you need to change the <code>Xcode Test</code> step and
+add a so called <code>matrix</code>. In this matrix you can define a multidemensional array, for which each
+value which is used to combine all values of every attribute in that array.</p>
+<p>In this case, we only need one deminsion: the Xcode version which is bound to the iOS SDK version.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">env</span>:
+  <span style="color:#f92672">PROJECT_FILE</span>: <span style="color:#75715e"># Relative path to Xcode project file</span>
+  <span style="color:#f92672">SCHEME</span>: <span style="color:#75715e"># Name of scheme to test</span>
+
+<span style="color:#f92672">jobs</span>:
+  <span style="color:#f92672">build</span>:
+  <span style="color:#f92672">runs-on</span>: <span style="color:#ae81ff">macos-latest</span>
+
+    <span style="color:#f92672">strategy</span>:
+      <span style="color:#f92672">matrix</span>: 
+        <span style="color:#f92672">xcode</span>:
+          - <span style="color:#f92672">destination</span>: <span style="color:#ae81ff">platform=iOS Simulator,OS=latest,name=iPhone 11</span>
+            <span style="color:#f92672">version </span>: <span style="color:#ae81ff">latest-stable</span>
+          - <span style="color:#f92672">destination</span>: <span style="color:#ae81ff">platform=iOS Simulator,OS=14.4,name=iPhone 11</span>
+            <span style="color:#f92672">version</span>: <span style="color:#ae81ff">12.4</span>
+          - <span style="color:#f92672">destination</span>: <span style="color:#ae81ff">platform=iOS Simulator,OS=13.7,name=iPhone 11</span>
+            <span style="color:#f92672">version</span>: <span style="color:#ae81ff">11.7</span>
+          - <span style="color:#f92672">destination</span>: <span style="color:#ae81ff">platform=iOS Simulator,OS=12.4,name=iPhone 7</span>
+            <span style="color:#f92672">version</span>: <span style="color:#ae81ff">10.3</span>
+    - <span style="color:#ae81ff">...</span>
+    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Xcode Test</span>
+        <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">devbotsxyz/xcode-test@v1.1.0</span>
+        <span style="color:#f92672">with</span>:
+        <span style="color:#f92672">project</span>: <span style="color:#ae81ff">${{ env.PROJECT_FILE }}</span>
+        <span style="color:#f92672">scheme</span>: <span style="color:#ae81ff">${{ env.PROJECT_SCHEME }}</span>
+        <span style="color:#f92672">configuration</span>: <span style="color:#ae81ff">Debug</span>
+        <span style="color:#f92672">destination</span>: <span style="color:#ae81ff">${{ matrix.xcode.destination }}</span>
+</code></pre></div><h2 id="result">Result</h2>
+<p>When completed, you can see all checks in your PR:</p>
+<p><img src="/20210413-validation-checks-on-pr.png" alt="All checks green!"></p>
+<h3 id="complete-pipeline-yaml">Complete pipeline yaml</h3>
+<p>Here you have the complete pipeline template which I use in one of my projects (<a href="https://github.com/readefries/IBAN-Helper/blob/main/.github/workflows/check-pr.yml">RFIBAN-Helper</a>).</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">name</span>: <span style="color:#ae81ff">Check PR</span>
+
+<span style="color:#f92672">on</span>:
+  <span style="color:#f92672">pull_request</span>:
+    <span style="color:#f92672">branches</span>: [ <span style="color:#ae81ff">main ]</span>
+
+<span style="color:#f92672">env</span>:
+  <span style="color:#f92672">PROJECT_FILE</span>: <span style="color:#75715e"># Relative path to Xcode project file</span>
+  <span style="color:#f92672">SCHEME</span>: <span style="color:#75715e"># Name of scheme to test</span>
+
+<span style="color:#f92672">jobs</span>:
+  <span style="color:#f92672">build</span>:
+    <span style="color:#f92672">runs-on</span>: <span style="color:#ae81ff">macos-latest</span>
+
+    <span style="color:#f92672">strategy</span>:
+      <span style="color:#f92672">matrix</span>: 
+        <span style="color:#f92672">xcode</span>:
+          - <span style="color:#f92672">destination</span>: <span style="color:#ae81ff">platform=iOS Simulator,OS=latest,name=iPhone 11</span>
+            <span style="color:#f92672">version </span>: <span style="color:#ae81ff">latest-stable</span>
+          - <span style="color:#f92672">destination</span>: <span style="color:#ae81ff">platform=iOS Simulator,OS=14.4,name=iPhone 11</span>
+            <span style="color:#f92672">version</span>: <span style="color:#ae81ff">12.4</span>
+          - <span style="color:#f92672">destination</span>: <span style="color:#ae81ff">platform=iOS Simulator,OS=13.7,name=iPhone 11</span>
+            <span style="color:#f92672">version</span>: <span style="color:#ae81ff">11.7</span>
+          - <span style="color:#f92672">destination</span>: <span style="color:#ae81ff">platform=iOS Simulator,OS=12.4,name=iPhone 7</span>
+            <span style="color:#f92672">version</span>: <span style="color:#ae81ff">10.3</span>
+    
+    <span style="color:#f92672">steps</span>:
+    - <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">actions/checkout@v2</span>
+    - <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">maxim-lobanov/setup-xcode@v1</span>
+      <span style="color:#f92672">with</span>:
+        <span style="color:#f92672">xcode-version</span>: <span style="color:#ae81ff">${{ matrix.xcode.version }}</span>
+    - <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">ruby/setup-ruby@v1</span>
+      <span style="color:#f92672">with</span>:
+        <span style="color:#f92672">bundler-cache</span>: <span style="color:#66d9ef">true</span>      
+    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Xcode Test</span>
+      <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">devbotsxyz/xcode-test@v1.1.0</span>
+      <span style="color:#f92672">with</span>:
+        <span style="color:#f92672">project</span>: <span style="color:#ae81ff">${{ env.PROJECT_FILE }}</span>
+        <span style="color:#f92672">scheme</span>: <span style="color:#ae81ff">${{ env.PROJECT_SCHEME }}</span>
+        <span style="color:#f92672">configuration</span>: <span style="color:#ae81ff">Debug</span>
+        <span style="color:#f92672">destination</span>: <span style="color:#ae81ff">${{ matrix.xcode.destination }}</span>
+    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Perform Cocoapod lib lint validation</span>
+      <span style="color:#f92672">run</span>: <span style="color:#ae81ff">make validate</span>
+    - <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">codecov/codecov-action@v1</span>
+      <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Determine code coverage with CodeCov</span>
+</code></pre></div>]]></content></item></channel></rss>

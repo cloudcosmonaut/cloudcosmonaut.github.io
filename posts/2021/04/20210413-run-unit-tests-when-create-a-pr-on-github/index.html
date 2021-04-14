@@ -1,0 +1,108 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content><meta name=description content="A major part of the DevOps philosophy, is testing early in your development cycle and test often. To do that, you can run your test on every PR. Perferably on multiple SDK versions.
+When to run First we need to specify when the Action should trigger. In this case I want to run the Action when a Pull Request is composed agains the main branch.
+on: pull_request: branches: [ main ] Check out the code In most cases, this step doesn&amp;rsquo;t require any configuration."><meta name=keywords content="Hindrik Bruinsma,blog,GitHub,GitHub Actions,DevOps,Azure,Azure DevOps,github,actions,devops,swift"><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://cloudcosmonaut.nl/posts/2021/04/20210413-run-unit-tests-when-create-a-pr-on-github/><title>Running unit tests for every PR :: Cloud Cosmonaut</title><link href=https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css rel=stylesheet type=text/css><link rel=stylesheet href=/main.eaf4f2571fc0260b30532ce37bc0e1c2107885bfec3b592755f30dba7741301e.css><meta itemprop=name content="Running unit tests for every PR"><meta itemprop=description content="A major part of the DevOps philosophy, is testing early in your development cycle and test often. To do that, you can run your test on every PR. Perferably on multiple SDK versions.
+When to run First we need to specify when the Action should trigger. In this case I want to run the Action when a Pull Request is composed agains the main branch.
+on: pull_request: branches: [ main ] Check out the code In most cases, this step doesn&rsquo;t require any configuration."><meta itemprop=datePublished content="2021-04-12T09:00:00+02:00"><meta itemprop=dateModified content="2021-04-12T09:00:00+02:00"><meta itemprop=wordCount content="547"><meta itemprop=image content="https://cloudcosmonaut.nl/"><meta itemprop=keywords content="github,actions,devops,swift,"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://cloudcosmonaut.nl/"><meta name=twitter:title content="Running unit tests for every PR"><meta name=twitter:description content="A major part of the DevOps philosophy, is testing early in your development cycle and test often. To do that, you can run your test on every PR. Perferably on multiple SDK versions.
+When to run First we need to specify when the Action should trigger. In this case I want to run the Action when a Pull Request is composed agains the main branch.
+on: pull_request: branches: [ main ] Check out the code In most cases, this step doesn&rsquo;t require any configuration."><meta property="article:published_time" content="2021-04-12 09:00:00 +0200 +0200"></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
+<span class=logo__text>Cloud Cosmonaut</span>
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/about/>About</a></li><li><a href=/posts/>Posts</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>3 minutes</p></div><article><h1 class=post-title><a href=https://cloudcosmonaut.nl/posts/2021/04/20210413-run-unit-tests-when-create-a-pr-on-github/>Running unit tests for every PR</a></h1><div class=post-content><p>A major part of the DevOps philosophy, is testing early in your development cycle and test often. To do that, you can run your
+test on every PR. Perferably on multiple SDK versions.</p><h2 id=when-to-run>When to run</h2><p>First we need to specify when the Action should trigger. In this case I want to run the Action when a Pull Request is composed agains the <code>main</code> branch.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=color:#f92672>on</span>:
+  <span style=color:#f92672>pull_request</span>:
+    <span style=color:#f92672>branches</span>: [ <span style=color:#ae81ff>main ]</span>
+</code></pre></div><h2 id=check-out-the-code>Check out the code</h2><p>In most cases, this step doesn&rsquo;t require any configuration. When you want to access sub-modules, files from git-lfs or a remote GIT repository you might need to change some settings.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml> <span style=color:#f92672>steps</span>:
+    - <span style=color:#f92672>uses</span>: <span style=color:#ae81ff>actions/checkout@v2</span>
+</code></pre></div><h2 id=run-the-unit-tests>Run the unit tests</h2><p>This step requires you to pass the relative location of the Xcode Project or Workspace file, the scheme
+in your project to test and the destination (or target if that&rsquo;s more in your vocabulary)</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml>- <span style=color:#f92672>name</span>: <span style=color:#ae81ff>Xcode Test</span>
+      <span style=color:#f92672>uses</span>: <span style=color:#ae81ff>devbotsxyz/xcode-test@v1.1.0</span>
+      <span style=color:#f92672>with</span>:
+        <span style=color:#f92672>project</span>: <span style=color:#e6db74>&#39;project.xsproj&#39;</span> <span style=color:#75715e># `project` and `workspace` cannot be used at the same time</span>
+        <span style=color:#f92672>workspace</span>: <span style=color:#e6db74>&#39;workspace.xcworkspace&#39;</span> <span style=color:#75715e># `project` and `workspace` cannot be used at the same time</span>
+        <span style=color:#f92672>scheme</span>: <span style=color:#e6db74>&#39;scheme&#39;</span>
+        <span style=color:#f92672>configuration</span>: <span style=color:#ae81ff>Debug</span>
+        <span style=color:#f92672>destination</span>: <span style=color:#ae81ff>platform=iOS Simulator,OS=latest,name=iPhone 11</span>
+</code></pre></div><h2 id=code-coverage>Code coverage</h2><p>You might want to track changes in code coverage to get some idea on the quality of code. With Codecov
+you need to add an Acces Token when your project is on a private repo.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml>    - <span style=color:#f92672>uses</span>: <span style=color:#ae81ff>codecov/codecov-action@v1</span>
+      <span style=color:#f92672>name</span>: <span style=color:#ae81ff>Determine code coverage with CodeCov</span>
+      <span style=color:#75715e># For private repos, an access token for codecov.io is required</span>
+      <span style=color:#75715e># token: ${{ secrets.CODECOV_TOKEN }}</span>
+</code></pre></div><h2 id=add-testing-matrix>Add testing matrix</h2><p>But now you want to test them on different SDKs. Then you need to change the <code>Xcode Test</code> step and
+add a so called <code>matrix</code>. In this matrix you can define a multidemensional array, for which each
+value which is used to combine all values of every attribute in that array.</p><p>In this case, we only need one deminsion: the Xcode version which is bound to the iOS SDK version.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=color:#f92672>env</span>:
+  <span style=color:#f92672>PROJECT_FILE</span>: <span style=color:#75715e># Relative path to Xcode project file</span>
+  <span style=color:#f92672>SCHEME</span>: <span style=color:#75715e># Name of scheme to test</span>
+
+<span style=color:#f92672>jobs</span>:
+  <span style=color:#f92672>build</span>:
+  <span style=color:#f92672>runs-on</span>: <span style=color:#ae81ff>macos-latest</span>
+
+    <span style=color:#f92672>strategy</span>:
+      <span style=color:#f92672>matrix</span>: 
+        <span style=color:#f92672>xcode</span>:
+          - <span style=color:#f92672>destination</span>: <span style=color:#ae81ff>platform=iOS Simulator,OS=latest,name=iPhone 11</span>
+            <span style=color:#f92672>version </span>: <span style=color:#ae81ff>latest-stable</span>
+          - <span style=color:#f92672>destination</span>: <span style=color:#ae81ff>platform=iOS Simulator,OS=14.4,name=iPhone 11</span>
+            <span style=color:#f92672>version</span>: <span style=color:#ae81ff>12.4</span>
+          - <span style=color:#f92672>destination</span>: <span style=color:#ae81ff>platform=iOS Simulator,OS=13.7,name=iPhone 11</span>
+            <span style=color:#f92672>version</span>: <span style=color:#ae81ff>11.7</span>
+          - <span style=color:#f92672>destination</span>: <span style=color:#ae81ff>platform=iOS Simulator,OS=12.4,name=iPhone 7</span>
+            <span style=color:#f92672>version</span>: <span style=color:#ae81ff>10.3</span>
+    - <span style=color:#ae81ff>...</span>
+    - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>Xcode Test</span>
+        <span style=color:#f92672>uses</span>: <span style=color:#ae81ff>devbotsxyz/xcode-test@v1.1.0</span>
+        <span style=color:#f92672>with</span>:
+        <span style=color:#f92672>project</span>: <span style=color:#ae81ff>${{ env.PROJECT_FILE }}</span>
+        <span style=color:#f92672>scheme</span>: <span style=color:#ae81ff>${{ env.PROJECT_SCHEME }}</span>
+        <span style=color:#f92672>configuration</span>: <span style=color:#ae81ff>Debug</span>
+        <span style=color:#f92672>destination</span>: <span style=color:#ae81ff>${{ matrix.xcode.destination }}</span>
+</code></pre></div><h2 id=result>Result</h2><p>When completed, you can see all checks in your PR:</p><p><img src=/20210413-validation-checks-on-pr.png alt="All checks green!"></p><h3 id=complete-pipeline-yaml>Complete pipeline yaml</h3><p>Here you have the complete pipeline template which I use in one of my projects (<a href=https://github.com/readefries/IBAN-Helper/blob/main/.github/workflows/check-pr.yml>RFIBAN-Helper</a>).</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=color:#f92672>name</span>: <span style=color:#ae81ff>Check PR</span>
+
+<span style=color:#f92672>on</span>:
+  <span style=color:#f92672>pull_request</span>:
+    <span style=color:#f92672>branches</span>: [ <span style=color:#ae81ff>main ]</span>
+
+<span style=color:#f92672>env</span>:
+  <span style=color:#f92672>PROJECT_FILE</span>: <span style=color:#75715e># Relative path to Xcode project file</span>
+  <span style=color:#f92672>SCHEME</span>: <span style=color:#75715e># Name of scheme to test</span>
+
+<span style=color:#f92672>jobs</span>:
+  <span style=color:#f92672>build</span>:
+    <span style=color:#f92672>runs-on</span>: <span style=color:#ae81ff>macos-latest</span>
+
+    <span style=color:#f92672>strategy</span>:
+      <span style=color:#f92672>matrix</span>: 
+        <span style=color:#f92672>xcode</span>:
+          - <span style=color:#f92672>destination</span>: <span style=color:#ae81ff>platform=iOS Simulator,OS=latest,name=iPhone 11</span>
+            <span style=color:#f92672>version </span>: <span style=color:#ae81ff>latest-stable</span>
+          - <span style=color:#f92672>destination</span>: <span style=color:#ae81ff>platform=iOS Simulator,OS=14.4,name=iPhone 11</span>
+            <span style=color:#f92672>version</span>: <span style=color:#ae81ff>12.4</span>
+          - <span style=color:#f92672>destination</span>: <span style=color:#ae81ff>platform=iOS Simulator,OS=13.7,name=iPhone 11</span>
+            <span style=color:#f92672>version</span>: <span style=color:#ae81ff>11.7</span>
+          - <span style=color:#f92672>destination</span>: <span style=color:#ae81ff>platform=iOS Simulator,OS=12.4,name=iPhone 7</span>
+            <span style=color:#f92672>version</span>: <span style=color:#ae81ff>10.3</span>
+    
+    <span style=color:#f92672>steps</span>:
+    - <span style=color:#f92672>uses</span>: <span style=color:#ae81ff>actions/checkout@v2</span>
+    - <span style=color:#f92672>uses</span>: <span style=color:#ae81ff>maxim-lobanov/setup-xcode@v1</span>
+      <span style=color:#f92672>with</span>:
+        <span style=color:#f92672>xcode-version</span>: <span style=color:#ae81ff>${{ matrix.xcode.version }}</span>
+    - <span style=color:#f92672>uses</span>: <span style=color:#ae81ff>ruby/setup-ruby@v1</span>
+      <span style=color:#f92672>with</span>:
+        <span style=color:#f92672>bundler-cache</span>: <span style=color:#66d9ef>true</span>      
+    - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>Xcode Test</span>
+      <span style=color:#f92672>uses</span>: <span style=color:#ae81ff>devbotsxyz/xcode-test@v1.1.0</span>
+      <span style=color:#f92672>with</span>:
+        <span style=color:#f92672>project</span>: <span style=color:#ae81ff>${{ env.PROJECT_FILE }}</span>
+        <span style=color:#f92672>scheme</span>: <span style=color:#ae81ff>${{ env.PROJECT_SCHEME }}</span>
+        <span style=color:#f92672>configuration</span>: <span style=color:#ae81ff>Debug</span>
+        <span style=color:#f92672>destination</span>: <span style=color:#ae81ff>${{ matrix.xcode.destination }}</span>
+    - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>Perform Cocoapod lib lint validation</span>
+      <span style=color:#f92672>run</span>: <span style=color:#ae81ff>make validate</span>
+    - <span style=color:#f92672>uses</span>: <span style=color:#ae81ff>codecov/codecov-action@v1</span>
+      <span style=color:#f92672>name</span>: <span style=color:#ae81ff>Determine code coverage with CodeCov</span>
+</code></pre></div></div></article><hr><div class=post-info><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83.0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7" y2="7"/></svg><span class=tag><a href=https://cloudcosmonaut.nl/tags/github/>github</a></span>
+<span class=tag><a href=https://cloudcosmonaut.nl/tags/actions/>actions</a></span>
+<span class=tag><a href=https://cloudcosmonaut.nl/tags/devops/>devops</a></span>
+<span class=tag><a href=https://cloudcosmonaut.nl/tags/swift/>swift</a></span></p><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6A2 2 0 004 4v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>547 Words</p><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>2021-04-12 07:00</p></div></main></div><footer class=footer><div class=footer__inner><div class=footer__content><span>&copy; 2021</span>
+<span>Hindrik Bruinsma <a href=https://creativecommons.org/licenses/by-sa/4.0/ target=_blank rel=noopener>CC BY-NC 4.0</a></span><span><a href=https://cloudcosmonaut.nl/posts/index.xml target=_blank title=rss><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 019 9"/><path d="M4 4a16 16 0 0116 16"/><circle cx="5" cy="19" r="1"/></svg></a></span></div></div><div class=footer__inner><div class=footer__content><span>Powered by <a href=http://gohugo.io>Hugo</a></span>
+<span>Made with &#10084; by <a href=https://github.com/rhazdon>Djordje Atlialp</a></span></div></div></footer></div><script type=text/javascript src=/bundle.min.599099f1f14b78b657d524b28e10e0c5098e7cd46e9c7aed73d577068a276c3ff1bb234cbf29cb313333e83cf411727b43157c91ce5b809e2ffc81664614608e.js integrity="sha512-WZCZ8fFLeLZX1SSyjhDgxQmOfNRunHrtc9V3BoonbD/xuyNMvynLMTMz6Dz0EXJ7QxV8kc5bgJ4v/IFmRhRgjg=="></script></body></html>

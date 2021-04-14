@@ -1,0 +1,72 @@
+baseURL = "https://cloudcosmonaut.nl/"
+languageCode = "en-us"
+title = "Cloud Cosmonaut"
+subtitle = "Hindrik Bruinsma | GitHub DevOps Consultant"
+
+copyright = 'Hindrik Bruinsma <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
+
+theme = "hello-friend-ng"
+paginate = 10
+
+[[params.social]]
+  name = "github"
+  url = "https://github.com/cloudcosmonaut/"
+
+[[params.social]]
+  name = "linkedin"
+  url = "linkedin.com/in/hbruinsma"
+
+[[params.social]]
+    name = "email"
+    url  = "mailto:github@cloudcosmonaut.nl"
+
+[[params.social]]
+    name = "case"
+    url  = "https://xpirit.com/"
+
+[params]
+  dateform        = "Jan 2, 2006"
+  dateformShort   = "Jan 2"
+  dateformNum     = "2006-01-02"
+  dateformNumTime = "2006-01-02 15:04"
+
+  # Subtitle for home
+  homeSubtitle = "A simple and beautiful blog"
+
+  # Set disableReadOtherPosts to true in order to hide the links to other posts.
+  disableReadOtherPosts = false
+
+  # Enable sharing buttons, if you like
+  enableSharingButtons = false
+
+  # Metadata mostly used in document's head
+  description = "Cloud Cosmonaut"
+  keywords = "Hindrik Bruinsma, blog, GitHub, GitHub Actions, DevOps, Azure, Azure DevOps"
+  images = [""]
+
+[taxonomies]
+    tag      = "tags"
+    category = "categories"
+
+[languages]
+  [languages.en]
+    readOtherPosts = "Read other posts"
+
+    [languages.en.params.logo]
+      logoText = "Cloud Cosmonaut"
+      logoHomeLink = "/"
+    # or
+    #
+    # path = "/img/your-example-logo.svg"
+    # alt = "Your example logo alt text"
+
+  # And you can even create generic menu
+[menu]
+  [[menu.main]]
+    identifier = "about"
+    name       = "About"
+    url        = "about/"
+  [[menu.main]]
+    identifier = "posts"
+    name       = "Posts"
+    url        = "posts/"

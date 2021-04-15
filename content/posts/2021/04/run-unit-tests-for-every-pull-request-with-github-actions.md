@@ -1,17 +1,22 @@
 ---
-title: "Running unit tests for every PR"
+title: "Run unit tests for every Pull Request with GitHub Actions"
 date: 2021-04-12T09:00:00+02:00
-tags: [ github, actions, devops, swift ]
+tags: [ github actions, devops, swift, pull request, pr, unit test ]
 draft: false
 ---
 
-A major part of the DevOps philosophy, is testing early in your development cycle and test often. To do that, you can run your 
-test on every PR. Perferably on multiple SDK versions.
+Testing early and often in your software development cycle is a major part of the DevOps philosophy. With GitHub actions, you can run your test on every Pull Request (PR). Testing as early as possible will detect errors in an early stage so errors can be fixed before releasing.
+ 
+## What are GitHub Actions?
+
+You might know GitHub as the open source developers platform. GitHub now contains GitHub Actions. You can compare Github Actions with an Azure Devops Pipeline or an AWS CodePipeline. With these Actions you can create a workflow. A workflow is a way of building and deploying your software automatically, often triggered by a PR. 
+ 
+You define a GitHub Action in a yaml file. In the next section I describe in yaml when and what the Github Action is going to do. 
 
 
-## When to run
+## When to trigger
 
-First we need to specify when the Action should trigger. In this case I want to run the Action when a Pull Request is composed agains the `main` branch.
+To start a GitHub Action you first need to specify when the Action should trigger. The trigger determines when the Action is executed. In this case the Action needs to trigger when a Pull Request is composed against the `main` branch.
 
 ```yaml
 on:
@@ -21,7 +26,7 @@ on:
 
 ## Check out the code
 
-In most cases, this step doesn't require any configuration. When you want to access sub-modules, files from git-lfs or a remote GIT repository you might need to change some settings.
+Your Action needs to have access to your code, so you need to add a step to checkout your code.
 
 ```yaml
  steps:
@@ -46,8 +51,7 @@ in your project to test and the destination (or target if that's more in your vo
 
 ## Code coverage
 
-You might want to track changes in code coverage to get some idea on the quality of code. With Codecov
-you need to add an Acces Token when your project is on a private repo.
+When your code changes over time, you might want to know how your code coverage changes over time. You can do this with Codecov. If you use a private repo, you need to add a Codecov Access Token.
 
 ```yaml
     - uses: codecov/codecov-action@v1
@@ -58,11 +62,9 @@ you need to add an Acces Token when your project is on a private repo.
 
 ## Add testing matrix
 
-But now you want to test them on different SDKs. Then you need to change the `Xcode Test` step and 
-add a so called `matrix`. In this matrix you can define a multidemensional array, for which each
-value which is used to combine all values of every attribute in that array.
-
-In this case, we only need one deminsion: the Xcode version which is bound to the iOS SDK version.
+As I want to know that my library works successfully on different versions of iOS, I want to run my Unit Tests on several SDK versions.
+ 
+To do this, you need to change the Test step, in my case `Xcode Test`, and add a so-called `matrix`. In my case I only need one dimension in which I put four SDK configurations.
 
 
 ```yaml
@@ -97,14 +99,14 @@ jobs:
 
 ## Result
 
-When completed, you can see all checks in your PR:
+When you completed all steps and committed the GitHub Action as a file in `.github/workflows/`, you will see the results of the checks when you create a PR.
 
 ![All checks green!](/20210413-validation-checks-on-pr.png)
 
 
 ### Complete pipeline yaml
 
-Here you have the complete pipeline template which I use in one of my projects ([RFIBAN-Helper](https://github.com/readefries/IBAN-Helper/blob/main/.github/workflows/check-pr.yml)). 
+Here you have the complete pipeline template which I used in one of my projects ([RFIBAN-Helper](https://github.com/readefries/IBAN-Helper/blob/main/.github/workflows/check-pr.yml)).
 
 ```yaml
 name: Check PR

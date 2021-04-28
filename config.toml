@@ -14,7 +14,7 @@ paginate = 10
 
 [[params.social]]
   name = "linkedin"
-  url = "linkedin.com/in/hbruinsma"
+  url = "linkedin.com/in/cloudcosmonaut"
 
 [[params.social]]
     name = "email"

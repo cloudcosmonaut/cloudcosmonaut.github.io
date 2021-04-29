@@ -31,7 +31,7 @@ paginate = 10
   dateformNumTime = "2006-01-02 15:04"
 
   # Subtitle for home
-  homeSubtitle = "The voyage of a DevOps Consultant with some ❤️ for [GitHub](https://github.com/cloudcosmonaut)"
+  homeSubtitle = "The voyage of a DevOps Consultant with ❤️ for GitHub and Open Source."
 
   # Set disableReadOtherPosts to true in order to hide the links to other posts.
   disableReadOtherPosts = false

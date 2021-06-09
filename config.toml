@@ -18,7 +18,7 @@ paginate = 10
 
 [[params.social]]
     name = "email"
-    url  = "mailto:github@cloudcosmonaut.nl"
+    url  = "mailto:hello@cloudcosmonaut.io"
 
 [[params.social]]
     name = "case"

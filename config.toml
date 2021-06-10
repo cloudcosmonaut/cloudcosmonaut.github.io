@@ -8,6 +8,8 @@ copyright = 'Hindrik Bruinsma <a href="https://creativecommons.org/licenses/by-s
 theme = "hello-friend-ng"
 paginate = 10
 
+googleAnalytics = 'G-W4BEF9DFPC'
+
 [[params.social]]
   name = "github"
   url = "https://github.com/cloudcosmonaut/"

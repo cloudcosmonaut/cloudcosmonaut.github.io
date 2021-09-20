@@ -16,7 +16,7 @@ googleAnalytics = 'G-W4BEF9DFPC'
 
 [[params.social]]
   name = "linkedin"
-  url = "linkedin.com/in/cloudcosmonaut"
+  url = "https://linkedin.com/in/cloudcosmonaut"
 
 [[params.social]]
     name = "email"

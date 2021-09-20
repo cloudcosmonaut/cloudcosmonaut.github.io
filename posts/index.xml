@@ -5,17 +5,17 @@ What are GitHub Actions? You might know GitHub as the open source developers pla
 <p>You define a GitHub Action in a yaml file. In the next section I describe in yaml when and what the Github Action is going to do.</p>
 <h2 id="when-to-trigger">When to trigger</h2>
 <p>To start a GitHub Action you first need to specify when the Action should trigger. The trigger determines when the Action is executed. In this case the Action needs to trigger when a Pull Request is composed against the <code>main</code> branch.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">on</span>:
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">on</span>:
   <span style="color:#f92672">pull_request</span>:
     <span style="color:#f92672">branches</span>: [ <span style="color:#ae81ff">main ]</span>
 </code></pre></div><h2 id="check-out-the-code">Check out the code</h2>
 <p>Your Action needs to have access to your code, so you need to add a step to checkout your code.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"> <span style="color:#f92672">steps</span>:
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"> <span style="color:#f92672">steps</span>:
     - <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">actions/checkout@v2</span>
 </code></pre></div><h2 id="run-the-unit-tests">Run the unit tests</h2>
 <p>This step requires you to pass the relative location of the Xcode Project or Workspace file, the scheme
 in your project to test and the destination (or target if that&rsquo;s more in your vocabulary)</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">- <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Xcode Test</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">- <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Xcode Test</span>
       <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">devbotsxyz/xcode-test@v1.1.0</span>
       <span style="color:#f92672">with</span>:
         <span style="color:#f92672">project</span>: <span style="color:#e6db74">&#39;project.xsproj&#39;</span> <span style="color:#75715e"># `project` and `workspace` cannot be used at the same time</span>
@@ -25,14 +25,14 @@ in your project to test and the destination (or target if that&rsquo;s more in y
         <span style="color:#f92672">destination</span>: <span style="color:#ae81ff">platform=iOS Simulator,OS=latest,name=iPhone 11</span>
 </code></pre></div><h2 id="code-coverage">Code coverage</h2>
 <p>When your code changes over time, you might want to know how your code coverage changes over time. You can do this with Codecov. If you use a private repo, you need to add a Codecov Access Token.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">    - <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">codecov/codecov-action@v1</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">    - <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">codecov/codecov-action@v1</span>
       <span style="color:#f92672">name</span>: <span style="color:#ae81ff">Determine code coverage with CodeCov</span>
       <span style="color:#75715e"># For private repos, an access token for codecov.io is required</span>
       <span style="color:#75715e"># token: ${{ secrets.CODECOV_TOKEN }}</span>
 </code></pre></div><h2 id="add-testing-matrix">Add testing matrix</h2>
 <p>As I want to know that my library works successfully on different versions of iOS, I want to run my Unit Tests on several SDK versions.</p>
 <p>To do this, you need to change the Test step, in my case <code>Xcode Test</code>, and add a so-called <code>matrix</code>. In my case I only need one dimension in which I put four SDK configurations.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">env</span>:
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">env</span>:
   <span style="color:#f92672">PROJECT_FILE</span>: <span style="color:#75715e"># Relative path to Xcode project file</span>
   <span style="color:#f92672">SCHEME</span>: <span style="color:#75715e"># Name of scheme to test</span>
 
@@ -64,7 +64,7 @@ in your project to test and the destination (or target if that&rsquo;s more in y
 <p><img src="/20210413-validation-checks-on-pr.png" alt="All checks green!"></p>
 <h3 id="complete-pipeline-yaml">Complete pipeline yaml</h3>
 <p>Here you have the complete pipeline template which I used in one of my projects (<a href="https://github.com/readefries/IBAN-Helper/blob/main/.github/workflows/check-pr.yml">RFIBAN-Helper</a>).</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">name</span>: <span style="color:#ae81ff">Check PR</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">name</span>: <span style="color:#ae81ff">Check PR</span>
 
 <span style="color:#f92672">on</span>:
   <span style="color:#f92672">pull_request</span>:

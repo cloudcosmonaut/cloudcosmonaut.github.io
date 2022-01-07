@@ -22,7 +22,7 @@ jobs:
 
       - name: Patch header.html with plausible
         run: |
-          echo "<script defer data-domain="cloudcosmonaut.io" data-api="/plausible/api/event" src="/plausible/script.js"></script>" >> themes/hello-friend-ng/layouts/partials/head.html
+          echo "<script defer data-domain=\"cloudcosmonaut.io\" src=\"https://plausible.io/js/plausible.js\"></script>" >> themes/hello-friend-ng/layouts/partials/head.html
 
       - name: Build
         run: hugo --minify

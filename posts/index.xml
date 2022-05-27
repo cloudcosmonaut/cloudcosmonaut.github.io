@@ -9,7 +9,7 @@ What do we need? Similar to keys to your house keys, you want seperate keys for 
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ssh-keygen -t ed25519 -C <span style="color:#e6db74">&#34;xpirit@github&#34;</span> -f ~/.ssh/id_ed25519_xpirit_github
 </span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ssh-keygen -t rsa -b <span style="color:#ae81ff">4096</span> -C <span style="color:#e6db74">&#34;customer@azdo&#34;</span> -f ~/.ssh/id_rsa_customer_azdo
 </span></span></code></pre></div><p>GitHub stores the keys on your account level, you can only assign specific keys to an organization when SSO is enabled for this organization.</p>
-<p>You can add your ssh key [https://github.com/settings/keys(https://github.com/settings/keys).</p>
+<p>You can add your ssh key <a href="https://github.com/settings/keys">https://github.com/settings/keys</a>.</p>
 <p>On Azure DevOps, keys are spicificly bound to your account on an organization. So this gives you a little better fine grained control. You can only assign a key to a single organization. Azure DevOps will prevent you from re-using a key.</p>
 <p>Just go the the accouns settings of your user on the organization, like:
 <a href="https://dev.azure.com/%3C%3CORGANIZATION%3E%3E/_usersSettings/keys">https://dev.azure.com/&laquo;ORGANIZATION&raquo;/_usersSettings/keys</a>.</p>

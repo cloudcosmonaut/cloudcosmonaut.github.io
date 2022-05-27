@@ -155,3 +155,9 @@ jobs:
     - uses: codecov/codecov-action@v1
       name: Determine code coverage with CodeCov
 ```
+
+## Round-up
+
+You will most likely make mistakes, and that’s okay. [Fail forward](https://www.youtube.com/watch?v=-fIZphLpPiY) :) When I started creating GitHub Actions for my projects, it took me a while to get everything up and running. As you added a trigger to run the GitHub Action for every PR, you can try out the settings and steps one by one, because it will run for every push to the branch you created for your PR.
+
+I hope this helped you move forward with GitHub Actions, please let me know if you run into any trouble.
